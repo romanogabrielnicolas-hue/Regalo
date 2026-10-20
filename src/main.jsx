@@ -62,6 +62,197 @@ function CorazonHolografico() {
   );
 }
 
+function ConstelacionJuli() {
+  const [seleccionadas, setSeleccionadas] = useState([]);
+
+  const estrellas = [
+    { x: 160, y: 34 },
+    { x: 111, y: 49 },
+    { x: 70, y: 43 },
+    { x: 43, y: 75 },
+    { x: 51, y: 111 },
+    { x: 83, y: 148 },
+    { x: 122, y: 181 },
+    { x: 160, y: 211 },
+    { x: 198, y: 181 },
+    { x: 237, y: 148 },
+    { x: 269, y: 111 },
+    { x: 277, y: 75 },
+    { x: 250, y: 43 },
+    { x: 209, y: 49 },
+  ];
+
+  const conexiones = [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [4, 5],
+    [5, 6],
+    [6, 7],
+    [7, 8],
+    [8, 9],
+    [9, 10],
+    [10, 11],
+    [11, 12],
+    [12, 13],
+    [13, 0],
+    [1, 4],
+    [4, 7],
+    [7, 10],
+    [10, 13],
+    [0, 7],
+  ];
+
+  const constelacionCompleta = seleccionadas.length >= 5;
+
+  function tocarEstrella(indice) {
+    setSeleccionadas((actuales) =>
+      actuales.includes(indice)
+        ? actuales.filter((numero) => numero !== indice)
+        : [...actuales, indice],
+    );
+  }
+
+  function reiniciarConstelacion() {
+    setSeleccionadas([]);
+  }
+
+  return (
+    <section className="constelacion-panel">
+      <div className="constelacion-encabezado">
+        <p className="eyebrow">
+          <Stars size={16} /> UN MAPA HECHO PARA VOS
+        </p>
+
+        <h2>
+          Hay estrellas que tienen <span>tu nombre.</span>
+        </h2>
+
+        <p>
+          Tocá cinco estrellas para descubrir lo que el universo tiene preparado
+          para vos. ✨
+        </p>
+      </div>
+
+      <div
+        className={`constelacion-escena ${
+          constelacionCompleta ? "constelacion-completa" : ""
+        }`}
+      >
+        <div className="constelacion-resplandor" />
+
+        <svg
+          className="constelacion-lineas"
+          viewBox="0 0 320 240"
+          role="group"
+          aria-label="Constelación interactiva. Seleccioná cinco estrellas."
+        >
+          {conexiones.map(([inicio, fin], indice) => {
+            const a = estrellas[inicio];
+            const b = estrellas[fin];
+            const iluminada =
+              constelacionCompleta ||
+              (seleccionadas.includes(inicio) && seleccionadas.includes(fin));
+
+            return (
+              <line
+                key={indice}
+                x1={a.x}
+                y1={a.y}
+                x2={b.x}
+                y2={b.y}
+                className={
+                  iluminada
+                    ? "linea-constelacion iluminada"
+                    : "linea-constelacion"
+                }
+              />
+            );
+          })}
+
+          {estrellas.map((estrella, indice) => {
+            const seleccionada = seleccionadas.includes(indice);
+
+            return (
+              <g
+                key={indice}
+                className={`estrella-interactiva ${
+                  seleccionada ? "estrella-seleccionada" : ""
+                }`}
+                role="button"
+                tabIndex={0}
+                aria-label={`Estrella ${indice + 1}${
+                  seleccionada ? ", seleccionada" : ""
+                }`}
+                aria-pressed={seleccionada}
+                onClick={() => tocarEstrella(indice)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    tocarEstrella(indice);
+                  }
+                }}
+              >
+                <circle
+                  cx={estrella.x}
+                  cy={estrella.y}
+                  r="13"
+                  className="estrella-area"
+                />
+                <circle
+                  cx={estrella.x}
+                  cy={estrella.y}
+                  r={seleccionada ? 4.5 : 3}
+                  className="estrella-punto"
+                />
+                <circle
+                  cx={estrella.x}
+                  cy={estrella.y}
+                  r="7"
+                  className="estrella-brillo"
+                />
+              </g>
+            );
+          })}
+
+          {constelacionCompleta && (
+            <g className="nombre-constelacion">
+              <text x="160" y="126" textAnchor="middle">
+                JULI
+              </text>
+              <text
+                x="160"
+                y="144"
+                textAnchor="middle"
+                className="corazon-texto"
+              >
+                ♡
+              </text>
+            </g>
+          )}
+        </svg>
+      </div>
+
+      <p className="constelacion-mensaje" aria-live="polite">
+        {constelacionCompleta
+          ? "Encontraste tu lugar entre mis estrellas, Juli. 💗"
+          : `Estrellas descubiertas: ${seleccionadas.length} de 5`}
+      </p>
+
+      {constelacionCompleta ? (
+        <button className="boton-neon" onClick={reiniciarConstelacion}>
+          Volver a descubrirla <Sparkles size={17} />
+        </button>
+      ) : (
+        <p className="constelacion-pista">
+          Cada estrella guarda un poquito de magia.
+        </p>
+      )}
+    </section>
+  );
+}
+
 function formatoTiempo(segundos) {
   if (!Number.isFinite(segundos)) return "0:00";
 
@@ -325,14 +516,31 @@ function App() {
               </div>
             </div>
           </section>
+          <ConstelacionJuli />
+          <section
+            className={`reproductor ${musicaActiva ? "musica-activa" : ""}`}
+          >
+            <div className="reproductor-caratula portada-juli">
+              <div className="portada-marco">
+                <span className="portada-etiqueta">EDICIÓN ESPECIAL</span>
 
-          <section className="reproductor">
-            <div className="reproductor-caratula">
-              <div className="disco">
-                <div className="disco-centro">
-                  <Heart fill="currentColor" size={23} />
+                <div className="portada-luna" />
+
+                <div className="portada-corazon">
+                  <Heart fill="currentColor" size={43} />
+                </div>
+
+                <div className="portada-destellos" aria-hidden="true">
+                  ✦　·　✧　·　✦
+                </div>
+
+                <div className="portada-titulos">
+                  <span>UNA CANCIÓN, UN RECUERDO</span>
+                  <h3>Para Juli ♡</h3>
+                  <p>Con cariño, Gabi</p>
                 </div>
               </div>
+
               <span className="ecualizador" aria-hidden="true">
                 <i />
                 <i />
@@ -344,7 +552,7 @@ function App() {
 
             <div className="reproductor-contenido">
               <p className="eyebrow">
-                <Music2 size={14} /> LO QUE ME RECUEDA A TI
+                <Music2 size={14} /> LA CANCIÓN QUE ME RECUERDA A VOS
               </p>
 
               <h2>{CANCION}</h2>
@@ -497,7 +705,18 @@ function App() {
               una sonrisa.
             </p>
 
-            <p className="firma-carta">Con mucho cariño, para vos. 💗</p>
+            <p className="texto-carta cierre-emotivo">
+              Y si alguna vez tenés un día difícil, quiero que recuerdes que
+              merecés cosas lindas, momentos que te hagan feliz y personas que
+              valoren esa forma tan tuya de brillar. Me alegra poder regalarte
+              este pequeño universo, aunque sea a través de una pantalla. Ojalá
+              cada vez que lo veas te saque una sonrisa. 💗
+            </p>
+
+            <p className="firma-carta firma-gabi">
+              Con todo mi cariño,
+              <span>Gabi ♡</span>
+            </p>
 
             <button
               className="boton-neon boton-completo"
