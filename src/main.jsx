@@ -1,5 +1,5 @@
+import { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useEffect, useRef, useState } from "react";
 import {
   Heart,
   Sparkles,
@@ -8,253 +8,518 @@ import {
   Music2,
   Pause,
   Play,
+  SkipBack,
+  SkipForward,
   Stars,
+  Volume2,
 } from "lucide-react";
 import "./style.css";
+
+const CANCION = "Hecha Pa Mi";
+const ARTISTA = "Grupo Frontera";
 
 function Particulas() {
   return (
     <div className="particulas" aria-hidden="true">
-      {Array.from({ length: 42 }, (_, i) => (
+      {Array.from({ length: 38 }, (_, i) => (
         <span
           key={i}
           style={{
-            "--x": `${(i * 47 + 5) % 100}%`,
-            "--delay": `${(i % 9) * -1.1}s`,
-            "--duration": `${7 + (i % 7)}s`,
-            "--size": `${10 + (i % 12)}px`,
+            "--x": `${(i * 43 + 7) % 100}%`,
+            "--delay": `${-(i % 10) * 1.2}s`,
+            "--duration": `${8 + (i % 7)}s`,
+            "--size": `${9 + (i % 12)}px`,
           }}
         >
-          {i % 3 === 0 ? "♥" : i % 3 === 1 ? "✦" : "✧"}
+          {i % 3 === 0 ? "♥" : i % 3 === 1 ? "✧" : "✦"}
         </span>
       ))}
     </div>
   );
 }
 
-export default function App() {
+function CorazonHolografico() {
+  return (
+    <div className="holo-scene" aria-label="Corazón holográfico">
+      <div className="holo-glow" />
+      <div className="holo-grid" />
+      <div className="orbita orbita-uno" />
+      <div className="orbita orbita-dos" />
+      <div className="orbita orbita-tres" />
+
+      <div className="nucleo">
+        <Heart className="holo-heart" fill="currentColor" />
+      </div>
+
+      <Sparkles className="holo-star estrella-uno" />
+      <Sparkles className="holo-star estrella-dos" />
+      <span className="holo-dot punto-uno" />
+      <span className="holo-dot punto-dos" />
+      <span className="holo-dot punto-tres" />
+    </div>
+  );
+}
+
+function formatoTiempo(segundos) {
+  if (!Number.isFinite(segundos)) return "0:00";
+
+  const minutos = Math.floor(segundos / 60);
+  const resto = Math.floor(segundos % 60);
+
+  return `${minutos}:${String(resto).padStart(2, "0")}`;
+}
+
+function App() {
+  const audioRef = useRef(null);
+
+  const [iniciada, setIniciada] = useState(false);
   const [cartaAbierta, setCartaAbierta] = useState(false);
   const [sorpresa, setSorpresa] = useState(false);
   const [musicaActiva, setMusicaActiva] = useState(false);
-  const audioRef = useRef(null);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-
-    return () => {
-      if (audio) {
-        audio.pause();
-      }
-    };
-  }, []);
+  const [tiempoActual, setTiempoActual] = useState(0);
+  const [duracion, setDuracion] = useState(0);
+  const [volumen, setVolumen] = useState(0.75);
+  const [errorMusica, setErrorMusica] = useState(false);
 
   async function alternarMusica() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    if (musicaActiva) {
+    if (!audio.paused) {
       audio.pause();
-      setMusicaActiva(false);
       return;
     }
 
     try {
+      setErrorMusica(false);
       await audio.play();
-      setMusicaActiva(true);
     } catch {
       setMusicaActiva(false);
-      alert(
-        "No se pudo reproducir la música. Revisá que exista public/musica.mp3.",
-      );
+      setErrorMusica(true);
     }
   }
 
+  function cambiarTiempo(e) {
+    const nuevoTiempo = Number(e.target.value);
+    setTiempoActual(nuevoTiempo);
+
+    if (audioRef.current) {
+      audioRef.current.currentTime = nuevoTiempo;
+    }
+  }
+
+  function cambiarVolumen(e) {
+    const nuevoVolumen = Number(e.target.value);
+    setVolumen(nuevoVolumen);
+
+    if (audioRef.current) {
+      audioRef.current.volume = nuevoVolumen;
+    }
+  }
+
+  function saltar(cantidad) {
+    const audio = audioRef.current;
+    if (!audio || !Number.isFinite(audio.duration)) return;
+
+    audio.currentTime = Math.max(
+      0,
+      Math.min(audio.duration, audio.currentTime + cantidad),
+    );
+  }
+
   return (
-    <main className="pagina">
-      <div className="fondo-luz luz-rosa" />
-      <div className="fondo-luz luz-violeta" />
+    <main className="juli-app">
+      <div className="nebula nebula-uno" />
+      <div className="nebula nebula-dos" />
+      <div className="nebula nebula-tres" />
       <Particulas />
 
       <audio
         ref={audioRef}
         src="/musica.mp3"
         loop
-        preload="none"
-        onEnded={() => setMusicaActiva(false)}
+        preload="metadata"
+        onPlay={() => {
+          setMusicaActiva(true);
+          setErrorMusica(false);
+        }}
         onPause={() => setMusicaActiva(false)}
-        onPlay={() => setMusicaActiva(true)}
+        onTimeUpdate={(e) => setTiempoActual(e.currentTarget.currentTime)}
+        onLoadedMetadata={(e) => {
+          setDuracion(
+            Number.isFinite(e.currentTarget.duration)
+              ? e.currentTarget.duration
+              : 0,
+          );
+          e.currentTarget.volume = volumen;
+        }}
+        onDurationChange={(e) => {
+          setDuracion(
+            Number.isFinite(e.currentTarget.duration)
+              ? e.currentTarget.duration
+              : 0,
+          );
+        }}
+        onEnded={() => {
+          setMusicaActiva(false);
+          setTiempoActual(0);
+        }}
+        onError={() => setErrorMusica(true)}
       />
 
-      <button
-        className="boton-musica"
-        onClick={alternarMusica}
-        aria-label={musicaActiva ? "Pausar música" : "Reproducir música"}
-      >
-        {musicaActiva ? <Pause size={18} /> : <Play size={18} />}
-        <Music2 size={18} />
-        <span>{musicaActiva ? "Pausar música" : "Reproducir música"}</span>
-      </button>
+      {!iniciada ? (
+        <section className="bienvenida">
+          <div className="bienvenida-halo">
+            <div className="bienvenida-corazon">
+              <Heart fill="currentColor" size={38} />
+            </div>
+          </div>
 
-      <section className="tarjeta">
-        <div className="destello-superior">
-          <Stars size={17} />
-          <span>UN PEQUEÑO UNIVERSO PARA VOS</span>
-          <Stars size={17} />
-        </div>
+          <p className="eyebrow">
+            <Sparkles size={15} /> UN UNIVERSO CREADO PARA VOS
+          </p>
 
-        <p className="etiqueta">
-          <Sparkles size={16} /> HECHO CON MUCHO CARIÑO
-        </p>
+          <h1>
+            Para vos,
+            <span className="texto-neon"> Juli ♡</span>
+          </h1>
 
-        <div className="corazon-escena" aria-label="Un corazón brillante">
-          <div className="aura aura-externa" />
-          <div className="aura aura-interna" />
-          <div className="aro aro-uno" />
-          <div className="aro aro-dos" />
-          <Heart className="corazon-3d" fill="currentColor" strokeWidth={1.1} />
-          <Sparkles className="brillo brillo-uno" />
-          <Sparkles className="brillo brillo-dos" />
-          <span className="destello-punto punto-uno" />
-          <span className="destello-punto punto-dos" />
-        </div>
+          <p className="bienvenida-texto">
+            Entre tantas estrellas, quería crear un lugarcito que tuviera tu
+            nombre. Esta pequeña sorpresa es solamente para vos.
+          </p>
 
-        <p className="introduccion">Hay algo que quiero que sepas...</p>
+          <button className="boton-neon" onClick={() => setIniciada(true)}>
+            Entrar a nuestro universo <Sparkles size={18} />
+          </button>
 
-        <h1>
-          Juli, sos la más
-          <span> hermosa del mundo</span>
-        </h1>
-
-        <div className="separador">
-          <span />
-          <Heart size={15} fill="currentColor" />
-          <span />
-        </div>
-
-        <p className="descripcion">
-          Si pudiera regalarte algo en este mundo, te regalaría la capacidad de
-          verte a través de mis ojos. Así sabrías lo especial que sos. 💗
-        </p>
-
-        <button
-          className="boton boton-principal"
-          onClick={() => setCartaAbierta(true)}
-        >
-          <Mail size={19} />
-          Abrí tu cartita
-          <Sparkles size={17} />
-        </button>
-
-        <p className="pista">Preparé algo especial para vos ✨</p>
-
-        {cartaAbierta && (
-          <div className="capa" onClick={() => setCartaAbierta(false)}>
-            <section
-              className="carta"
-              onClick={(e) => e.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Carta para Juli"
+          <p className="nota-inicial">UNA PEQUEÑA SORPRESA HECHA CON CARIÑO</p>
+        </section>
+      ) : (
+        <>
+          <header className="barra-superior">
+            <a
+              className="marca"
+              href="#inicio"
+              onClick={(e) => {
+                e.preventDefault();
+                setCartaAbierta(false);
+                setSorpresa(false);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
             >
-              <button
-                className="cerrar"
-                aria-label="Cerrar carta"
-                onClick={() => setCartaAbierta(false)}
-              >
-                <X size={20} />
-              </button>
+              <Heart fill="currentColor" size={19} />
+              JULI<span>.exe</span>
+            </a>
 
-              <div className="sello-carta">
-                <Heart size={29} fill="currentColor" />
+            <div className="estado">
+              <span className="estado-punto" />
+              UN UNIVERSO PARA VOS
+            </div>
+
+            <button
+              className="boton-icono"
+              onClick={alternarMusica}
+              aria-label={musicaActiva ? "Pausar música" : "Reproducir música"}
+              title={musicaActiva ? "Pausar música" : "Reproducir música"}
+            >
+              {musicaActiva ? <Pause size={18} /> : <Play size={18} />}
+            </button>
+          </header>
+
+          <section className="hero" id="inicio">
+            <div className="hero-texto">
+              <p className="eyebrow">
+                <Stars size={16} /> HECHO ESPECIALMENTE PARA VOS
+              </p>
+
+              <h1>
+                El universo es inmenso,
+                <span> pero vos sos mi parte favorita.</span>
+              </h1>
+
+              <p className="descripcion">
+                Hay personas que hacen que los días sean más lindos sin siquiera
+                intentarlo. Este pequeño mundo digital lleva tu nombre porque
+                quería regalarte algo diferente. 💗
+              </p>
+
+              <div className="acciones">
+                <button
+                  className="boton-neon"
+                  onClick={() => setCartaAbierta(true)}
+                >
+                  <Mail size={18} /> Abrir mi cartita
+                </button>
+
+                <button
+                  className="boton-secundario"
+                  onClick={() => setSorpresa(true)}
+                >
+                  Una sorpresa para vos <Heart size={17} />
+                </button>
               </div>
 
-              <p className="carta-etiqueta">UNA CARTITA PARA VOS</p>
-              <h2>Para vos, Juli 💌</h2>
+              <div className="mini-dedicatoria">
+                <Heart fill="currentColor" size={16} />
+                <span>Un detalle pequeño, con un cariño enorme.</span>
+              </div>
+            </div>
 
-              <div className="linea-decorativa">✧ ── ♡ ── ✧</div>
-
-              <p>
-                Quería regalarte este pequeño rincón para recordarte lo
-                increíble que sos. Ojalá nunca te falten motivos para sonreír,
-                sueños que te hagan feliz y personas que te recuerden lo mucho
-                que valés.
-              </p>
-
-              <p>
-                No hace falta una fecha especial para decirle a alguien que hace
-                el mundo un poquito más lindo. Y vos tenés esa magia especial.
-                ✨
-              </p>
-
-              <p className="firma">Con mucho cariño Gabi alias-Cabezon ❤️</p>
-
-              <button
-                className="boton boton-principal"
-                onClick={() => {
-                  setCartaAbierta(false);
-                  setSorpresa(true);
-                }}
-              >
-                Ver mi sorpresa <Sparkles size={18} />
-              </button>
-            </section>
-          </div>
-        )}
-
-        {sorpresa && (
-          <div className="capa" onClick={() => setSorpresa(false)}>
-            <section
-              className="sorpresa"
-              onClick={(e) => e.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Sorpresa para Juli"
-            >
-              <button
-                className="cerrar"
-                aria-label="Cerrar sorpresa"
-                onClick={() => setSorpresa(false)}
-              >
-                <X size={20} />
-              </button>
-
-              <div className="sorpresa-brillos">
-                <Sparkles />
-                <Heart fill="currentColor" />
-                <Sparkles />
+            <div className="hero-visual">
+              <div className="etiqueta-holo">
+                <span className="estado-punto" />
+                CORAZÓN CONECTADO
               </div>
 
-              <img
-                className="foto-juli"
-                src="/juli.jpg"
-                alt="Una foto especial de Juli"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-              />
+              <CorazonHolografico />
 
-              <p className="carta-etiqueta">ESTO ES PARA VOS</p>
-              <h2>¡Nunca dejes de brillar, Juli!</h2>
-              <p>
-                Sos una persona única y merecés cosas hermosas. Que la vida te
-                regale tantas sonrisas como lo feliz que me haces sentir tu a
-                mi. 💖
+              <div className="frecuencia">
+                <Sparkles size={15} />
+                <span>FRECUENCIA: CARIÑO INFINITO</span>
+              </div>
+            </div>
+          </section>
+
+          <section className="reproductor">
+            <div className="reproductor-caratula">
+              <div className="disco">
+                <div className="disco-centro">
+                  <Heart fill="currentColor" size={23} />
+                </div>
+              </div>
+              <span className="ecualizador" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+                <i />
+              </span>
+            </div>
+
+            <div className="reproductor-contenido">
+              <p className="eyebrow">
+                <Music2 size={14} /> NUESTRA BANDA SONORA
               </p>
 
-              <div className="corazones-finales">♡ ♥ ♡</div>
-            </section>
-          </div>
-        )}
+              <h2>{CANCION}</h2>
+              <p className="artista">{ARTISTA}</p>
 
-        <footer className="pie">
-          <span>Hecho con cariño para Juli </span>
-          <Heart size={14} fill="currentColor" />
-          <span className="pie-destello">✧</span>
-        </footer>
-      </section>
+              <div className="progreso-fila">
+                <span>{formatoTiempo(tiempoActual)}</span>
+                <input
+                  className="barra-progreso"
+                  type="range"
+                  min="0"
+                  max={duracion || 1}
+                  step="0.1"
+                  value={Math.min(tiempoActual, duracion || 1)}
+                  onChange={cambiarTiempo}
+                  aria-label="Posición de la canción"
+                  style={{
+                    "--progreso": `${
+                      duracion ? (tiempoActual / duracion) * 100 : 0
+                    }%`,
+                  }}
+                />
+                <span>{formatoTiempo(duracion)}</span>
+              </div>
 
-      <p className="frase-final">Un detalle pequeño, con un cariño enorme.</p>
+              <div className="controles-musica">
+                <button
+                  className="control-secundario"
+                  onClick={() => saltar(-10)}
+                  aria-label="Retroceder diez segundos"
+                  title="Retroceder 10 segundos"
+                >
+                  <SkipBack size={18} />
+                </button>
+
+                <button
+                  className="control-play"
+                  onClick={alternarMusica}
+                  aria-label={
+                    musicaActiva ? "Pausar canción" : "Reproducir canción"
+                  }
+                >
+                  {musicaActiva ? (
+                    <Pause size={21} fill="currentColor" />
+                  ) : (
+                    <Play size={21} fill="currentColor" />
+                  )}
+                </button>
+
+                <button
+                  className="control-secundario"
+                  onClick={() => saltar(10)}
+                  aria-label="Avanzar diez segundos"
+                  title="Avanzar 10 segundos"
+                >
+                  <SkipForward size={18} />
+                </button>
+
+                <div className="control-volumen">
+                  <Volume2 size={16} />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={volumen}
+                    onChange={cambiarVolumen}
+                    aria-label="Volumen"
+                  />
+                </div>
+              </div>
+
+              {errorMusica && (
+                <p className="error-musica" role="status">
+                  No se pudo cargar la canción. Revisá que exista
+                  public/musica.mp3 y que sea un audio válido.
+                </p>
+              )}
+            </div>
+          </section>
+
+          <section className="dedicatoria-panel">
+            <div className="dedicatoria-icono">
+              <Sparkles size={24} />
+            </div>
+
+            <div className="dedicatoria-texto">
+              <p className="eyebrow">UN MENSAJITO PARA VOS</p>
+              <h2>Hay personas que son pura magia.</h2>
+              <p>
+                Y después estás vos, Juli. Ojalá nunca te falten motivos para
+                sonreír, sueños que te emocionen y personas que te recuerden lo
+                valiosa que sos. ✨
+              </p>
+            </div>
+
+            <button
+              className="boton-icono boton-flecha"
+              onClick={() => setCartaAbierta(true)}
+              aria-label="Leer carta"
+            >
+              <Mail size={19} />
+            </button>
+          </section>
+
+          <footer className="footer">
+            Hecho con <Heart size={13} fill="currentColor" /> mucho cariño para
+            Juli.
+          </footer>
+        </>
+      )}
+
+      {cartaAbierta && (
+        <div className="modal-capa" onClick={() => setCartaAbierta(false)}>
+          <section
+            className="modal-ventana"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Carta para Juli"
+          >
+            <button
+              className="modal-cerrar"
+              onClick={() => setCartaAbierta(false)}
+              aria-label="Cerrar carta"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="modal-corazon">
+              <Heart fill="currentColor" size={29} />
+            </div>
+
+            <p className="eyebrow centrado">UNA CARTA PARA VOS</p>
+            <h2>
+              Para vos, Juli <span>♡</span>
+            </h2>
+            <div className="linea-romantica">✧ ─── ♡ ─── ✧</div>
+
+            <p className="texto-carta">
+              Quería regalarte algo distinto, algo que no fuera solamente una
+              imagen o unas palabras. Por eso hice este pequeño universo para
+              vos, con la ilusión de sacarte una sonrisa.
+            </p>
+
+            <p className="texto-carta">
+              Ojalá pudieras verte un ratito a través de los ojos de las
+              personas que te aprecian. Quizás así entenderías lo especial que
+              sos y toda la luz que podés transmitir con algo tan simple como
+              una sonrisa.
+            </p>
+
+            <p className="firma-carta">Con mucho cariño, para vos. 💗</p>
+
+            <button
+              className="boton-neon boton-completo"
+              onClick={() => {
+                setCartaAbierta(false);
+                setSorpresa(true);
+              }}
+            >
+              Descubrir la sorpresa <Sparkles size={17} />
+            </button>
+          </section>
+        </div>
+      )}
+
+      {sorpresa && (
+        <div className="modal-capa" onClick={() => setSorpresa(false)}>
+          <section
+            className="modal-ventana modal-sorpresa"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Sorpresa para Juli"
+          >
+            <button
+              className="modal-cerrar"
+              onClick={() => setSorpresa(false)}
+              aria-label="Cerrar sorpresa"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="corazones-sorpresa" aria-hidden="true">
+              {Array.from({ length: 18 }, (_, i) => (
+                <span key={i} style={{ "--i": i }}>
+                  {i % 2 === 0 ? "♥" : "✧"}
+                </span>
+              ))}
+            </div>
+
+            <div className="modal-corazon">
+              <Heart fill="currentColor" size={31} />
+            </div>
+
+            <p className="eyebrow centrado">SORPRESA DESBLOQUEADA</p>
+            <h2>¡Nunca dejes de brillar, Juli!</h2>
+
+            <img
+              className="foto-juli"
+              src="/juli.jpg"
+              alt="Una foto especial de Juli"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+
+            <p className="texto-carta">
+              Que nunca te falten cosas lindas, abrazos sinceros, sueños por
+              cumplir y motivos para ser feliz. Este detalle es pequeño, pero
+              está hecho pensando en vos. ❤️
+            </p>
+
+            <p className="firma-carta">Un universo entero para vos ✨</p>
+          </section>
+        </div>
+      )}
     </main>
   );
 }
+
 createRoot(document.getElementById("root")).render(<App />);
