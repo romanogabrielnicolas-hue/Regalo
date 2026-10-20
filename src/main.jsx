@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Heart,
@@ -21,14 +21,16 @@ const ARTISTA = "Grupo Frontera";
 function Particulas() {
   return (
     <div className="particulas" aria-hidden="true">
-      {Array.from({ length: 38 }, (_, i) => (
+      {Array.from({ length: 42 }, (_, i) => (
         <span
           key={i}
+          className={i % 3 === 0 ? "particula-corazon" : "particula-estrella"}
           style={{
             "--x": `${(i * 43 + 7) % 100}%`,
-            "--delay": `${-(i % 10) * 1.2}s`,
-            "--duration": `${8 + (i % 7)}s`,
-            "--size": `${9 + (i % 12)}px`,
+            "--delay": `${-(i % 14) * 1.1}s`,
+            "--duration": `${9 + (i % 8)}s`,
+            "--size": `${10 + (i % 13)}px`,
+            "--desvio": `${((i % 5) - 2) * 18}px`,
           }}
         >
           {i % 3 === 0 ? "♥" : i % 3 === 1 ? "✧" : "✦"}
@@ -80,6 +82,49 @@ function App() {
   const [duracion, setDuracion] = useState(0);
   const [volumen, setVolumen] = useState(0.75);
   const [errorMusica, setErrorMusica] = useState(false);
+  const [mensajeSorpresa, setMensajeSorpresa] = useState("");
+  const [firmaSorpresa, setFirmaSorpresa] = useState("");
+
+  useEffect(() => {
+    if (!sorpresa) {
+      setMensajeSorpresa("");
+      setFirmaSorpresa("");
+      return;
+    }
+
+    const mensaje =
+      "Que nunca te falten cosas lindas, abrazos sinceros, sueños por cumplir y motivos para ser feliz. Este detalle es pequeño, pero está hecho pensando en vos. ❤️";
+    const firma = "Un universo entero para vos ✨";
+    let indiceMensaje = 0;
+    let indiceFirma = 0;
+    let intervaloFirma;
+
+    setMensajeSorpresa("");
+    setFirmaSorpresa("");
+
+    const intervaloMensaje = window.setInterval(() => {
+      indiceMensaje += 1;
+      setMensajeSorpresa(mensaje.slice(0, indiceMensaje));
+
+      if (indiceMensaje >= mensaje.length) {
+        window.clearInterval(intervaloMensaje);
+
+        intervaloFirma = window.setInterval(() => {
+          indiceFirma += 1;
+          setFirmaSorpresa(firma.slice(0, indiceFirma));
+
+          if (indiceFirma >= firma.length) {
+            window.clearInterval(intervaloFirma);
+          }
+        }, 70);
+      }
+    }, 70);
+
+    return () => {
+      window.clearInterval(intervaloMensaje);
+      if (intervaloFirma) window.clearInterval(intervaloFirma);
+    };
+  }, [sorpresa]);
 
   async function alternarMusica() {
     const audio = audioRef.current;
@@ -209,7 +254,7 @@ function App() {
               }}
             >
               <Heart fill="currentColor" size={19} />
-              JULI<span>.exe</span>
+              TE QUIERO<span>JULI</span>
             </a>
 
             <div className="estado">
@@ -299,7 +344,7 @@ function App() {
 
             <div className="reproductor-contenido">
               <p className="eyebrow">
-                <Music2 size={14} /> NUESTRA BANDA SONORA
+                <Music2 size={14} /> LO QUE ME RECUEDA A TI
               </p>
 
               <h2>{CANCION}</h2>
@@ -486,7 +531,7 @@ function App() {
 
             <div className="corazones-sorpresa" aria-hidden="true">
               {Array.from({ length: 18 }, (_, i) => (
-                <span key={i} style={{ "--i": i }}>
+                <span key={i} style={{ "--i": i, "--left": `${i * 5.5}%` }}>
                   {i % 2 === 0 ? "♥" : "✧"}
                 </span>
               ))}
@@ -508,13 +553,25 @@ function App() {
               }}
             />
 
-            <p className="texto-carta">
-              Que nunca te falten cosas lindas, abrazos sinceros, sueños por
-              cumplir y motivos para ser feliz. Este detalle es pequeño, pero
-              está hecho pensando en vos. ❤️
+            <p className="texto-carta texto-revelado" aria-live="polite">
+              {mensajeSorpresa}
+              {mensajeSorpresa.length > 0 && mensajeSorpresa.length < 157 && (
+                <span className="cursor-escritura" aria-hidden="true">
+                  ▍
+                </span>
+              )}
             </p>
 
-            <p className="firma-carta">Un universo entero para vos ✨</p>
+            <p className="firma-carta firma-revelada">
+              {firmaSorpresa}
+              {mensajeSorpresa.length >= 157 &&
+                firmaSorpresa.length > 0 &&
+                firmaSorpresa.length < 29 && (
+                  <span className="cursor-escritura" aria-hidden="true">
+                    ▍
+                  </span>
+                )}
+            </p>
           </section>
         </div>
       )}
