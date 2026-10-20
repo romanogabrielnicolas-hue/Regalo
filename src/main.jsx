@@ -94,7 +94,7 @@ function App() {
 
     const mensaje =
       "Que nunca te falten cosas lindas, abrazos sinceros, sueños por cumplir y motivos para ser feliz. Este detalle es pequeño, pero está hecho pensando en vos. ❤️";
-    const firma = "Un universo entero para vos ✨";
+    const firma = "GABI, TE QUIERO NEGRA";
     let indiceMensaje = 0;
     let indiceFirma = 0;
     let intervaloFirma;
@@ -562,16 +562,25 @@ function App() {
               )}
             </p>
 
-            <p className="firma-carta firma-revelada">
-              {firmaSorpresa}
-              {mensajeSorpresa.length >= 157 &&
-                firmaSorpresa.length > 0 &&
-                firmaSorpresa.length < 29 && (
+            <div className="firma-romantica">
+              <p className="firma-para-vos">Con todo mi cariño,</p>
+
+              <h3 className="firma-nombre">
+                {firmaSorpresa
+                  .replace("Con todo mi cariño, ", "")
+                  .replace(" ❤️", "")}
+                {firmaSorpresa.length >= 29 && <span> ♥</span>}
+                {firmaSorpresa.length < 29 && (
                   <span className="cursor-escritura" aria-hidden="true">
                     ▍
                   </span>
                 )}
-            </p>
+              </h3>
+
+              <p className="firma-final">
+                Hecho especialmente para vos, Juli ✨
+              </p>
+            </div>
           </section>
         </div>
       )}

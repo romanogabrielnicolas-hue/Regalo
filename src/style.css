@@ -3283,3 +3283,47 @@ input:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .modal-sorpresa, .modal-sorpresa .modal-corazon, .cursor-escritura { animation: none !important; }
 }
+.firma-romantica {
+  margin: 28px auto 10px;
+  padding-top: 20px;
+  border-top: 1px solid #ff9cdb35;
+  text-align: center;
+}
+
+.firma-para-vos {
+  color: #ffd0ef;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.firma-nombre {
+  margin: 8px 0;
+  color: #ffd0ef;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(35px, 8vw, 46px);
+  font-style: italic;
+  text-shadow: 0 0 8px #ff82d4, 0 0 22px #c45bff80;
+  animation: firma-brillo 2.5s ease-in-out infinite;
+}
+
+.firma-corazon {
+  display: inline-block;
+  color: #ff82d4;
+  animation: firma-latido 1.2s ease-in-out infinite;
+}
+
+.firma-final {
+  color: #bda6d4;
+  font-size: 11px;
+}
+
+@keyframes firma-brillo {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+@keyframes firma-latido {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
