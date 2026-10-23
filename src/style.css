@@ -3905,3 +3905,210 @@ input:focus-visible {
     animation: none;
   }
 }
+
+/* ===== ESCENA ROMÁNTICA DE PUCCA Y GARU ===== */
+
+.escena-puka-garu {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 540px);
+  margin: 28px auto;
+  padding: clamp(12px, 3vw, 20px);
+  overflow: hidden;
+  border: 1px solid #ff8ee780;
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 50% 38%, #f65fc32e, transparent 58%),
+    radial-gradient(ellipse at 15% 85%, #8b5cf626, transparent 42%),
+    linear-gradient(145deg, #211034 0%, #160b2a 52%, #10091e 100%);
+  box-shadow: 0 0 28px #d75aff25, 0 0 65px #ff4fa610,
+    inset 0 0 30px #ff8ee712;
+}
+
+.escena-puka-garu::before,
+.escena-puka-garu::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 170px;
+  height: 170px;
+  border: 1px solid #ffc4f31c;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: orbita-puka-garu 12s linear infinite;
+}
+
+.escena-puka-garu::before {
+  top: -85px;
+  left: -65px;
+}
+
+.escena-puka-garu::after {
+  right: -85px;
+  bottom: -100px;
+  width: 220px;
+  height: 220px;
+  animation-direction: reverse;
+  animation-duration: 16s;
+}
+
+.aura-puka-garu {
+  position: absolute;
+  z-index: -1;
+  top: 18%;
+  left: 18%;
+  width: 64%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ed68ff65 0%, #fa69d72b 38%, transparent 72%);
+  filter: blur(28px);
+  animation: aura-puka-late 3.8s ease-in-out infinite;
+}
+
+.animacion-puka-garu {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: min(100%, 480px);
+  aspect-ratio: 368 / 380;
+  margin: 0 auto;
+  border-radius: 16px;
+  background-image: url("/pucca-garu-animacion.webp");
+  background-repeat: no-repeat;
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+  box-shadow: 0 12px 30px #ff55d32b, 0 0 24px #dc70ff20;
+  overflow: hidden;
+  animation:
+    entrada-puka-garu 900ms cubic-bezier(.2, .8, .25, 1) both,
+    secuencia-puka-garu 6.6s steps(8, end) 900ms infinite;
+  will-change: background-position, transform, opacity;
+}
+
+.escena-puka-garu:hover .animacion-puka-garu {
+  box-shadow: 0 12px 34px #ff55d35c, 0 0 32px #dc70ff3b;
+}
+
+.corazones-puka-garu {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.corazones-puka-garu span {
+  position: absolute;
+  bottom: -32px;
+  left: calc(5% + (var(--i) * 7.8%));
+  opacity: 0;
+  font-size: clamp(13px, 3vw, 23px);
+  filter: drop-shadow(0 0 7px #ff65d9);
+  animation: corazon-flotante-puka 5.5s ease-in infinite;
+  animation-delay: var(--delay);
+}
+
+.brillo-puka-garu {
+  position: absolute;
+  top: 15%;
+  right: 12%;
+  z-index: 2;
+  color: #fff2bf;
+  font-size: clamp(20px, 4vw, 30px);
+  text-shadow: 0 0 12px #ffdb86, 0 0 24px #ff8bdf;
+  animation: destello-puka 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.titulo-puka-garu {
+  position: relative;
+  z-index: 3;
+  margin: 16px 0 4px;
+  color: #ffe4fa;
+  font-family: Georgia, serif;
+  font-size: clamp(19px, 4vw, 25px);
+  font-style: italic;
+  text-align: center;
+  text-shadow: 0 0 14px #ff6edc85;
+}
+
+.titulo-puka-garu span {
+  display: inline-block;
+  color: #ff8bdf;
+  animation: latido-corazon-puka 1.5s ease-in-out infinite;
+}
+
+.subtitulo-puka-garu {
+  margin: 0 auto 4px;
+  max-width: 32ch;
+  color: #d9c7f7;
+  font-size: clamp(12px, 2.8vw, 14px);
+  line-height: 1.6;
+  text-align: center;
+}
+
+@keyframes entrada-puka-garu {
+  0% { opacity: 0; transform: translateX(72%) scale(.72) rotate(5deg); filter: blur(5px); }
+  68% { opacity: 1; transform: translateX(-3%) scale(1.025) rotate(-1deg); filter: blur(0); }
+  100% { opacity: 1; transform: translateX(0) scale(1) rotate(0); filter: blur(0); }
+}
+
+@keyframes secuencia-puka-garu {
+  from { background-position: 0% 0%; }
+  to { background-position: 100% 0%; }
+}
+
+@keyframes aura-puka-late {
+  0%, 100% { opacity: .48; transform: scale(.9); }
+  50% { opacity: .95; transform: scale(1.12); }
+}
+
+@keyframes corazon-flotante-puka {
+  0% { transform: translate3d(0, 0, 0) rotate(-10deg) scale(.65); opacity: 0; }
+  14% { opacity: .95; }
+  75% { opacity: .8; }
+  100% { transform: translate3d(12px, -330px, 0) rotate(18deg) scale(1.15); opacity: 0; }
+}
+
+@keyframes latido-corazon-puka {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes destello-puka {
+  0%, 100% { opacity: .45; transform: scale(.82) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.16) rotate(18deg); }
+}
+
+@keyframes orbita-puka-garu {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1.08); }
+}
+
+@media (max-width: 600px) {
+  .escena-puka-garu {
+    margin: 22px auto;
+    padding: 10px;
+    border-radius: 18px;
+  }
+
+  .animacion-puka-garu { border-radius: 12px; }
+  .corazones-puka-garu span { font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animacion-puka-garu,
+  .aura-puka-garu,
+  .corazones-puka-garu span,
+  .titulo-puka-garu span,
+  .brillo-puka-garu,
+  .escena-puka-garu::before,
+  .escena-puka-garu::after {
+    animation: none !important;
+  }
+
+  .animacion-puka-garu {
+    animation: none !important;
+    background-position: 100% 0%;
+  }
+}

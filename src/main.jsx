@@ -284,7 +284,7 @@ function App() {
     }
 
     const mensaje =
-      "Que nunca te falten cosas lindas, abrazos sinceros, sueños por cumplir y motivos para ser feliz. Este detalle es pequeño, pero está hecho pensando en vos. ❤️";
+      "Yo quiero ser tu Garu, y que vos seas mi Puka: elegirte incluso en los días difíciles, cuidarte a mi manera y hacerte sonreír una y otra mil veces. Porque mi aventura favorita siempre va a ser con vos.";
     const firma = "GABI, TE QUIERO NEGRA";
     let indiceMensaje = 0;
     let indiceFirma = 0;
@@ -771,6 +771,39 @@ function App() {
                 e.currentTarget.style.display = "none";
               }}
             />
+
+            <div className="escena-puka-garu">
+              <div className="aura-puka-garu" aria-hidden="true" />
+
+              <div className="corazones-puka-garu" aria-hidden="true">
+                {Array.from({ length: 12 }, (_, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      "--i": i,
+                      "--delay": `${(i % 6) * 0.45}s`,
+                    }}
+                  >
+                    {i % 3 === 0 ? "💗" : i % 3 === 1 ? "♡" : "✨"}
+                  </span>
+                ))}
+              </div>
+
+              <div
+                className="animacion-puka-garu"
+                role="img"
+                aria-label="Garu aparece, Pucca llega corriendo, lo abraza y le da un beso mientras flotan corazones"
+              />
+
+              <div className="brillo-puka-garu" aria-hidden="true">✦</div>
+
+              <p className="titulo-puka-garu">
+                Mi Puka y mi Garu <span>♡</span>
+              </p>
+              <p className="subtitulo-puka-garu">
+                Mi aventura favorita siempre va a ser con vos ✨
+              </p>
+            </div>
 
             <p className="texto-carta texto-revelado" aria-live="polite">
               {mensajeSorpresa}
