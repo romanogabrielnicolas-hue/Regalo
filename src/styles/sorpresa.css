@@ -1,0 +1,443 @@
+/* ───────── Sorpresa: regalo interactivo ───────── */
+.regalo-escena {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding-block: 10px 6px;
+}
+
+.regalo {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 18px auto 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  animation: regalo-flota 3s ease-in-out infinite;
+}
+
+@keyframes regalo-flota {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1.5deg);
+  }
+}
+
+.regalo-luz {
+  position: absolute;
+  inset: -40%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 150, 230, 0.7), rgba(176, 80, 255, 0.25) 45%, transparent 68%);
+  opacity: 0.55;
+  animation: portal-late 2.6s ease-in-out infinite;
+}
+
+.regalo-caja,
+.regalo-tapa {
+  position: absolute;
+  background: linear-gradient(160deg, #ff62c6, #9b49ff);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 0 34px -6px var(--rosa);
+}
+
+.regalo-caja {
+  left: 14%;
+  right: 14%;
+  bottom: 4%;
+  height: 52%;
+  border-radius: 8px 8px 14px 14px;
+}
+
+.regalo-tapa {
+  left: 8%;
+  right: 8%;
+  bottom: 52%;
+  height: 22%;
+  border-radius: 12px;
+  transform-origin: 0 100%;
+  background: linear-gradient(160deg, #ff82d4, #b268ff);
+}
+
+.regalo-cinta,
+.regalo-tapa::after {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  width: 18%;
+  background: linear-gradient(180deg, #fff1fb, #ffc4ee);
+}
+
+.regalo-cinta {
+  top: 0;
+  bottom: 0;
+}
+
+.regalo-tapa::after {
+  content: "";
+  top: 0;
+  bottom: 0;
+}
+
+.regalo-lazo {
+  position: absolute;
+  left: 50%;
+  bottom: 70%;
+  translate: -50% 0;
+  z-index: 2;
+  filter: drop-shadow(0 0 12px var(--rosa));
+}
+
+.regalo-chispas i {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  font-style: normal;
+  font-size: 18px;
+  color: #ffd0f2;
+  text-shadow: 0 0 12px var(--rosa);
+  opacity: 0;
+}
+
+.regalo-pista {
+  font-family: var(--fuente-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--rosa-claro);
+  animation: estrella-titila 2s ease-in-out infinite;
+}
+
+.fase-abriendo .regalo {
+  animation: regalo-sacude 0.45s ease-in-out 2;
+  pointer-events: none;
+}
+
+.fase-abriendo .regalo-tapa {
+  animation: tapa-vuela 0.9s ease-in 0.5s forwards;
+}
+
+.fase-abriendo .regalo-luz {
+  animation: luz-estalla 1s ease-in 0.5s forwards;
+}
+
+.fase-abriendo .regalo-chispas i {
+  animation: chispa-sale 0.8s ease-out 0.55s forwards;
+}
+
+.fase-abriendo .regalo-pista {
+  visibility: hidden;
+}
+
+@keyframes regalo-sacude {
+  25% {
+    transform: rotate(-5deg) scale(1.04);
+  }
+  75% {
+    transform: rotate(5deg) scale(1.04);
+  }
+}
+
+@keyframes tapa-vuela {
+  to {
+    transform: translate3d(30px, -190px, 0) rotate(38deg);
+    opacity: 0;
+  }
+}
+
+@keyframes luz-estalla {
+  to {
+    transform: scale(4);
+    opacity: 1;
+  }
+}
+
+@keyframes chispa-sale {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateX(120px);
+  }
+}
+
+/* ───────── Sorpresa: contenido ───────── */
+.sorpresa {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  text-align: center;
+}
+
+.sorpresa h2 {
+  font-size: clamp(1.7rem, 6.5vw, 2.3rem);
+}
+
+.s-item {
+  opacity: 0;
+  animation: carta-item 1s var(--ease) calc(var(--i, 0) * 0.35s + 0.1s) both;
+}
+
+.sorpresa-sello {
+  justify-self: center;
+  filter: drop-shadow(0 0 16px var(--rosa));
+  animation: corazon-late 1.9s ease-in-out infinite;
+}
+
+.sorpresa-lluvia {
+  position: absolute;
+  inset: -60px -20px 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sorpresa-lluvia span {
+  position: absolute;
+  top: -20px;
+  left: var(--left);
+  font-size: 16px;
+  color: #ff9be0;
+  text-shadow: 0 0 10px var(--rosa);
+  opacity: 0;
+  animation: lluvia 5.5s linear calc(var(--i) * 0.28s) 2 both;
+}
+
+@keyframes lluvia {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(520px) rotate(40deg);
+    opacity: 0;
+  }
+}
+
+.foto-juli-marco {
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 179, 230, 0.35);
+  box-shadow: 0 24px 50px -22px #000, 0 0 50px -12px rgba(255, 79, 192, 0.65);
+}
+
+.foto-juli {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* Mensaje que se escribe (el texto fantasma reserva el alto final) */
+.texto-revelado {
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+  hyphens: auto;
+}
+
+.texto-fantasma {
+  display: block;
+  visibility: hidden;
+}
+
+.texto-escrito {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.cursor-escritura {
+  color: var(--rosa);
+  animation: cursor 0.9s steps(1) infinite;
+}
+
+@keyframes cursor {
+  50% {
+    opacity: 0;
+  }
+}
+
+.firma-romantica {
+  display: grid;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.9s ease, transform 0.9s var(--ease);
+}
+
+.firma-romantica.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.firma-para-vos {
+  font-size: 15px;
+  color: var(--texto-suave);
+}
+
+.firma-nombre {
+  min-height: 1.4em;
+  font-family: var(--fuente-firma);
+  font-size: clamp(1.7rem, 7.5vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--rosa-claro);
+  text-shadow: 0 0 20px rgba(255, 79, 192, 0.75);
+}
+
+.firma-corazon {
+  display: inline-block;
+  color: var(--rosa);
+  animation: corazon-late 1.6s ease-in-out infinite;
+}
+
+.firma-final {
+  margin-top: 6px;
+  font-family: var(--fuente-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 179, 230, 0.7);
+}
+
+/* ───────── Puka y Garu ───────── */
+.puka-escena {
+  position: relative;
+  padding: 14px 14px 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 179, 230, 0.25);
+  background: linear-gradient(170deg, rgba(60, 20, 100, 0.55), rgba(18, 8, 34, 0.7));
+  overflow: hidden;
+}
+
+.puka-aura {
+  position: absolute;
+  top: 6%;
+  left: 18%;
+  width: 64%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(237, 104, 255, 0.4), rgba(250, 105, 215, 0.17) 38%, transparent 72%);
+  filter: blur(26px);
+  animation: portal-late 3.8s ease-in-out infinite;
+}
+
+.puka-sprite {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 440px);
+  aspect-ratio: 368 / 380;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: url("/pucca-garu-animacion.webp") no-repeat 0% 0% / 800% 100%;
+  box-shadow: 0 12px 30px rgba(255, 85, 211, 0.2), 0 0 24px rgba(220, 112, 255, 0.15);
+  animation:
+    puka-entra 0.9s var(--ease) both,
+    puka-cuadros 6.6s step-end 0.9s infinite;
+}
+
+/* 8 cuadros exactos: cada uno ocupa 1/7 del ancho de la hoja */
+@keyframes puka-cuadros {
+  0% { background-position: 0% 0; }
+  12.5% { background-position: 14.2857% 0; }
+  25% { background-position: 28.5714% 0; }
+  37.5% { background-position: 42.8571% 0; }
+  50% { background-position: 57.1429% 0; }
+  62.5% { background-position: 71.4286% 0; }
+  75% { background-position: 85.7143% 0; }
+  87.5% { background-position: 100% 0; }
+  100% { background-position: 100% 0; }
+}
+
+@keyframes puka-entra {
+  from {
+    opacity: 0;
+    transform: translateX(40%) scale(0.75) rotate(4deg);
+    filter: blur(5px);
+  }
+}
+
+.puka-corazones {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.puka-corazones span {
+  position: absolute;
+  bottom: -30px;
+  left: calc(5% + var(--i) * 7.8%);
+  font-size: clamp(13px, 3.4vw, 22px);
+  opacity: 0;
+  filter: drop-shadow(0 0 7px #ff65d9);
+  animation: puka-corazon 5.5s ease-in var(--delay) infinite;
+}
+
+@keyframes puka-corazon {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-10deg) scale(0.65);
+    opacity: 0;
+  }
+  14% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(12px, -330px, 0) rotate(18deg) scale(1.15);
+    opacity: 0;
+  }
+}
+
+.puka-brillo {
+  position: absolute;
+  top: 15%;
+  right: 12%;
+  z-index: 2;
+  font-size: clamp(20px, 4vw, 28px);
+  color: #fff2bf;
+  text-shadow: 0 0 12px #ffdb86, 0 0 24px #ff8bdf;
+  animation: estrella-titila 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.puka-titulo {
+  position: relative;
+  z-index: 3;
+  margin: 16px 0 4px;
+  font-family: var(--fuente-titulo);
+  font-style: italic;
+  font-size: clamp(19px, 5vw, 25px);
+  color: #ffe4fa;
+  text-shadow: 0 0 14px rgba(255, 110, 220, 0.5);
+}
+
+.puka-titulo span {
+  display: inline-block;
+  color: #ff8bdf;
+  animation: corazon-late 1.5s ease-in-out infinite;
+}
+
+.puka-subtitulo {
+  position: relative;
+  z-index: 3;
+  max-width: 32ch;
+  margin: 0 auto;
+  font-size: clamp(13px, 3.4vw, 14.5px);
+  line-height: 1.6;
+  color: #d9c7f7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .puka-sprite {
+    animation: none !important;
+    background-position: 100% 0;
+  }
+}

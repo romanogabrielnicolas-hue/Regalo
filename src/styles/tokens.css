@@ -1,0 +1,31 @@
+/* Paleta y medidas del universo: cambiá los colores acá y se actualiza todo. */
+:root {
+  --negro: #07030f;
+  --violeta-profundo: #140826;
+  --violeta: #6f3bb0;
+  --lavanda: #c9aaff;
+  --rosa: #ff4fc0;
+  --rosa-claro: #ffb3e6;
+  --magenta: #e0309e;
+  --perla: #fff4fb;
+  --texto-suave: #dccbe9;
+  --borde: rgba(255, 170, 235, 0.2);
+
+  --degradado-neon: linear-gradient(135deg, #ff4fc0 0%, #c04cff 55%, #8c5cff 100%);
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+
+  --fuente-texto: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fuente-titulo: "Playfair Display", Georgia, "Times New Roman", serif;
+  --fuente-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --fuente-firma: "Dancing Script", "Segoe Script", "Brush Script MT", cursive;
+
+  --pad: clamp(18px, 5vw, 56px);
+  --alto-barra: 64px;
+}
+
+/* Ángulo animable para el borde luminoso giratorio (si el navegador no lo soporta, queda fijo). */
+@property --ang {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}

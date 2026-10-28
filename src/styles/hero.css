@@ -1,0 +1,425 @@
+/* ───────── Barra superior ───────── */
+.barra-superior {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: calc(var(--alto-barra) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) max(var(--pad), env(safe-area-inset-right, 0px)) 0
+    max(var(--pad), env(safe-area-inset-left, 0px));
+  background: linear-gradient(180deg, rgba(10, 4, 20, 0.86), rgba(10, 4, 20, 0.45));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 179, 230, 0.12);
+}
+
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-family: var(--fuente-mono);
+  font-size: clamp(11px, 3vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--perla);
+  text-decoration: none;
+}
+
+.marca svg {
+  color: var(--rosa);
+  filter: drop-shadow(0 0 8px var(--rosa));
+}
+
+.marca span {
+  margin-left: 0.4em;
+  color: var(--rosa-claro);
+}
+
+.estado {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fuente-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--texto-suave);
+}
+
+@media (min-width: 720px) {
+  .estado {
+    display: inline-flex;
+  }
+}
+
+.barra-progreso-scroll {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, #ff4fc0, #b46cff);
+  box-shadow: 0 0 12px #ff4fc0;
+  transform: scaleX(var(--p, 0));
+  transform-origin: left;
+}
+
+/* ───────── Hero ───────── */
+.hero {
+  display: grid;
+  gap: clamp(8px, 4vw, 40px);
+  align-items: center;
+  min-height: calc(100vh - var(--alto-barra) - 20px);
+  min-height: calc(100dvh - var(--alto-barra) - 20px);
+  padding-block: clamp(14px, 4vw, 40px);
+}
+
+.hero-texto {
+  display: grid;
+  justify-items: center;
+  gap: clamp(14px, 3.4vw, 22px);
+  text-align: center;
+}
+
+.hero-visual {
+  order: -1;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.hero-titulo {
+  display: grid;
+  gap: 2px;
+  font-size: clamp(1.95rem, 9vw, 4.1rem);
+  line-height: 1.1;
+}
+
+.hero-titulo .palabras:last-child {
+  font-style: italic;
+}
+
+.descripcion {
+  max-width: 46ch;
+  color: var(--texto-suave);
+  font-size: clamp(15.5px, 4.1vw, 18px);
+  line-height: 1.72;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.acciones .btn {
+  flex: 1 1 210px;
+  max-width: 300px;
+}
+
+.mini-dedicatoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13.5px;
+  color: var(--rosa-claro);
+  opacity: 0.9;
+}
+
+.mini-dedicatoria svg {
+  color: var(--rosa);
+  animation: corazon-late 2s ease-in-out infinite;
+}
+
+.etiqueta-holo,
+.frecuencia {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--fuente-mono);
+  font-size: clamp(9.5px, 2.6vw, 11px);
+  letter-spacing: 0.17em;
+  color: var(--rosa-claro);
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+
+  .hero-texto {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .hero-visual {
+    order: 0;
+  }
+
+  .acciones {
+    justify-content: flex-start;
+  }
+
+  .acciones .btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* ───────── Corazón holográfico ───────── */
+.holo-escena {
+  --rx: 0deg;
+  --ry: 0deg;
+  position: relative;
+  width: min(62vw, 360px);
+  aspect-ratio: 1;
+  perspective: 900px;
+}
+
+@media (max-height: 700px) and (max-width: 560px) {
+  .holo-escena {
+    width: min(52vw, 220px);
+  }
+}
+
+.holo-resplandor {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 79, 192, 0.5), rgba(140, 92, 255, 0.22) 45%, transparent 70%);
+  animation: portal-late 4s ease-in-out infinite;
+}
+
+.holo-piso {
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: 4%;
+  height: 34%;
+  background:
+    linear-gradient(90deg, rgba(255, 130, 225, 0.38) 1px, transparent 1px) 0 0 / 34px 100%,
+    linear-gradient(0deg, rgba(255, 130, 225, 0.38) 1px, transparent 1px) 0 0 / 100% 24px;
+  transform: rotateX(68deg);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 15%, transparent 68%);
+  mask-image: radial-gradient(ellipse at 50% 0%, #000 15%, transparent 68%);
+  animation: piso-avanza 3s linear infinite;
+}
+
+@keyframes piso-avanza {
+  to {
+    background-position:
+      34px 0,
+      0 24px;
+  }
+}
+
+.holo-orbita {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 160, 232, 0.5);
+  box-shadow:
+    0 0 18px rgba(255, 79, 192, 0.3),
+    inset 0 0 18px rgba(170, 110, 255, 0.2);
+}
+
+.holo-orbita::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffd9f4;
+  box-shadow: 0 0 14px 2px #ff6ccf;
+}
+
+.holo-orbita-1 {
+  inset: 8%;
+  transform: rotateX(72deg);
+  animation: orbita-1 9s linear infinite;
+}
+
+.holo-orbita-2 {
+  inset: -2%;
+  border-color: rgba(201, 170, 255, 0.45);
+  transform: rotateX(72deg) rotateY(50deg);
+  animation: orbita-2 14s linear infinite;
+}
+
+.holo-orbita-3 {
+  inset: 16%;
+  border-style: dashed;
+  border-color: rgba(255, 179, 230, 0.3);
+  transform: rotateX(72deg) rotateY(-40deg);
+  animation: orbita-3 19s linear infinite;
+}
+
+@keyframes orbita-1 {
+  to {
+    transform: rotateX(72deg) rotateZ(360deg);
+  }
+}
+
+@keyframes orbita-2 {
+  to {
+    transform: rotateX(72deg) rotateY(50deg) rotateZ(-360deg);
+  }
+}
+
+@keyframes orbita-3 {
+  to {
+    transform: rotateX(72deg) rotateY(-40deg) rotateZ(360deg);
+  }
+}
+
+.holo-nucleo {
+  position: absolute;
+  inset: 21% 18% 22%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.25s ease-out;
+}
+
+.holo-nucleo:active .holo-svg {
+  transform: scale(0.94);
+}
+
+.holo-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 22px rgba(255, 79, 192, 0.85)) drop-shadow(0 0 48px rgba(140, 92, 255, 0.5));
+  animation: holo-flota 4.5s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.holo-barrido {
+  animation: barrido 4.6s ease-in-out infinite;
+}
+
+@keyframes barrido {
+  0% {
+    transform: translateX(-10px) skewX(-18deg);
+  }
+  60%,
+  100% {
+    transform: translateX(160px) skewX(-18deg);
+  }
+}
+
+@keyframes holo-flota {
+  0%,
+  100% {
+    transform: translateY(4px) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.04);
+  }
+}
+
+.holo-estrella {
+  position: absolute;
+  color: #ffd9f4;
+  filter: drop-shadow(0 0 8px #ff6ccf);
+  animation: estrella-titila 2.6s ease-in-out infinite;
+}
+
+.holo-estrella-1 {
+  top: 10%;
+  right: 12%;
+  width: 22px;
+  height: 22px;
+}
+
+.holo-estrella-2 {
+  bottom: 24%;
+  left: 6%;
+  width: 16px;
+  height: 16px;
+  animation-delay: -1.2s;
+}
+
+.holo-punto {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffd9f4;
+  box-shadow: 0 0 12px #ff6ccf;
+  animation: estrella-titila 3s ease-in-out infinite;
+}
+
+.holo-punto-1 {
+  top: 22%;
+  left: 14%;
+}
+
+.holo-punto-2 {
+  top: 40%;
+  right: 4%;
+  animation-delay: -1s;
+}
+
+.holo-punto-3 {
+  bottom: 14%;
+  right: 24%;
+  animation-delay: -2s;
+}
+
+@keyframes estrella-titila {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(16deg);
+  }
+}
+
+.holo-explosion {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.holo-explosion i {
+  position: absolute;
+  left: -0.5em;
+  top: -0.5em;
+  font-style: normal;
+  font-size: 18px;
+  color: #ff9be0;
+  text-shadow: 0 0 10px #ff4fc0;
+  animation: explotar 1s ease-out forwards;
+}
+
+@keyframes explotar {
+  0% {
+    transform: rotate(var(--a)) translateX(0) rotate(calc(var(--a) * -1)) scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(var(--a) * -1)) scale(1.3);
+    opacity: 0;
+  }
+}

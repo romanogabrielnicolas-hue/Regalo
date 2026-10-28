@@ -1,0 +1,181 @@
+/* ───────── Constelación ───────── */
+.constelacion {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 14px;
+}
+
+.constelacion .encabezado-seccion {
+  width: 100%;
+}
+
+.constelacion-escena {
+  position: relative;
+  width: min(100%, 560px);
+  aspect-ratio: 4 / 3;
+  border-radius: 30px;
+  border: 1px solid var(--borde);
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(80, 30, 140, 0.45), transparent 70%),
+    linear-gradient(160deg, rgba(20, 8, 40, 0.8), rgba(8, 3, 18, 0.9));
+  box-shadow: 0 30px 70px -30px #000, 0 0 60px -24px rgba(140, 92, 255, 0.6);
+  overflow: hidden;
+}
+
+.constelacion-resplandor {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 79, 192, 0.28), transparent 68%);
+  opacity: 0.35;
+  transition: opacity 1.2s ease;
+}
+
+.constelacion-completa .constelacion-resplandor {
+  opacity: 1;
+  animation: portal-late 3.4s ease-in-out infinite;
+}
+
+.constelacion-svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: manipulation;
+}
+
+.polvo {
+  fill: #e8d8ff;
+  opacity: 0.4;
+  animation: estrella-titila 4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.constelacion-relleno {
+  fill: rgba(255, 90, 200, 0);
+  transition: fill 1.4s ease;
+  pointer-events: none;
+}
+
+.constelacion-completa .constelacion-relleno {
+  fill: rgba(255, 90, 200, 0.16);
+}
+
+.linea-base {
+  stroke: rgba(201, 170, 255, 0.2);
+  stroke-width: 0.8;
+  pointer-events: none;
+}
+
+.linea-luz {
+  stroke: #ff8ee0;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.8s var(--ease);
+  pointer-events: none;
+}
+
+.linea-luz.encendida {
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 3px #ff4fc0);
+}
+
+.estrella {
+  cursor: pointer;
+  outline: none;
+}
+
+.estrella-area {
+  fill: transparent;
+}
+
+.estrella-halo {
+  fill: rgba(255, 110, 210, 0.55);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.35s ease;
+}
+
+.estrella-punto {
+  fill: #efe3ff;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 0.35s var(--ease),
+    fill 0.35s ease;
+}
+
+.estrella:not(.estrella-activa) .estrella-punto {
+  animation: estrella-titila 3.4s ease-in-out infinite;
+}
+
+.estrella-activa .estrella-punto {
+  fill: #ffd0f2;
+  transform: scale(1.55);
+  filter: drop-shadow(0 0 4px #ff4fc0);
+}
+
+.estrella-activa .estrella-halo {
+  opacity: 1;
+  animation: halo-late 1.8s ease-in-out infinite;
+}
+
+.estrella:focus-visible .estrella-halo {
+  opacity: 1;
+  stroke: #fff;
+  stroke-width: 1;
+}
+
+@keyframes halo-late {
+  50% {
+    transform: scale(1.5);
+    opacity: 0.55;
+  }
+}
+
+.constelacion-nombre {
+  animation: nombre-aparece 1.4s var(--ease) 0.5s both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.nombre-texto {
+  font-family: var(--fuente-titulo);
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: 7px;
+  fill: #fff;
+  filter: drop-shadow(0 0 8px #ff4fc0);
+}
+
+.nombre-corazon {
+  font-size: 18px;
+  fill: #ffb3e6;
+  filter: drop-shadow(0 0 6px #ff4fc0);
+}
+
+@keyframes nombre-aparece {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+.constelacion-mensaje {
+  min-height: 1.6em;
+  font-family: var(--fuente-mono);
+  font-size: clamp(12px, 3.3vw, 14px);
+  letter-spacing: 0.06em;
+  color: var(--rosa-claro);
+}
+
+.constelacion-pista {
+  font-size: 14px;
+  color: var(--texto-suave);
+  opacity: 0.8;
+}

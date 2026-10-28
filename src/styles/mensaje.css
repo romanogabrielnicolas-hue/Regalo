@@ -1,0 +1,72 @@
+/* ───────── Dedicatoria y pie ───────── */
+.dedicatoria-seccion {
+  padding-top: 0;
+}
+
+.dedicatoria {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(14px, 4vw, 26px);
+  padding: clamp(20px, 5vw, 36px);
+}
+
+.dedicatoria-icono {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  color: var(--rosa-claro);
+  background: rgba(255, 79, 192, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(255, 179, 230, 0.3), 0 0 26px -6px var(--rosa);
+}
+
+.dedicatoria-texto {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dedicatoria-texto h2 {
+  font-size: clamp(1.35rem, 5vw, 2rem);
+}
+
+.dedicatoria-texto p:last-child {
+  color: var(--texto-suave);
+  font-size: clamp(14.5px, 3.9vw, 16.5px);
+  line-height: 1.7;
+}
+
+.dedicatoria-boton {
+  width: 54px;
+  min-width: 54px;
+  min-height: 54px;
+}
+
+@media (max-width: 600px) {
+  .dedicatoria {
+    grid-template-columns: 1fr auto;
+  }
+
+  .dedicatoria-icono {
+    display: none;
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 36px 16px calc(40px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  font-size: 13.5px;
+  color: rgba(255, 179, 230, 0.7);
+}
+
+.footer svg {
+  color: var(--rosa);
+  animation: corazon-late 2s ease-in-out infinite;
+}
